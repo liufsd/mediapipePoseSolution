@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -27,19 +28,24 @@ public class MainActivity extends AppCompatActivity {
         imageView.setImageDrawable(null);
         frameLayout.addView(imageView);
         imageView.setVisibility(View.VISIBLE);
-        Pose pose = new Pose(this, new PoseOptions());
-        pose.setResultListener(new ResultListener<PoseResult>() {
+        new Thread(new Runnable() {
             @Override
-            public void run(PoseResult result) {
-                Log.v("Pose", "[TS:" + (System.currentTimeMillis() - time)+ "] " + getPoseLandmarksDebugString(result.poseLandmarks()));
-                imageView.setResult(result);
-                imageView.update();
+            public void run() {
+                Pose pose = new Pose(MainActivity.this, new PoseOptions());
+                pose.setResultListener(new ResultListener<PoseResult>() {
+                    @Override
+                    public void run(PoseResult result) {
+                        Log.v("Pose", "[TS:" + ( SystemClock.elapsedRealtime() - time)+ "] " + getPoseLandmarksDebugString(result.poseLandmarks()));
+                        imageView.setResult(result);
+                        imageView.update();
+                    }
+                });
+                Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.test);
+                bmp = Bitmap.createScaledBitmap(bmp,480,640,true);
+                time = SystemClock.elapsedRealtime();
+                pose.send(bmp, time);
             }
-        });
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.test);
-        bmp = Bitmap.createScaledBitmap(bmp,480,640,true);
-        time = System.currentTimeMillis();
-        pose.send(bmp, time);
+        }).start();
     }
 
     //해당 코드에서 landmark의 좌표를 추출해낼 수 있다.
