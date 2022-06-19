@@ -72,9 +72,9 @@ public class PoseResult extends ImageSolutionResult {
 
         PoseResult build() {
             String missing = "";
-            if (this.poseLandmarks == null) {
-                missing = missing + " multiFaceLandmarks";
-            }
+//            if (this.poseLandmarks == null) {
+//                missing = missing + " multiFaceLandmarks";
+//            }
 
             if (this.imagePacket == null) {
                 missing = missing + " imagePacket";

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
@@ -28,10 +29,11 @@ public class MainActivity extends AppCompatActivity {
         imageView.setImageDrawable(null);
         frameLayout.addView(imageView);
         imageView.setVisibility(View.VISIBLE);
+        Handler handler = new Handler();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Pose pose = new Pose(MainActivity.this, new PoseOptions());
+                Pose pose = new Pose(MainActivity.this, new PoseOptions(true));
                 pose.setResultListener(new ResultListener<PoseResult>() {
                     @Override
                     public void run(PoseResult result) {
@@ -40,10 +42,39 @@ public class MainActivity extends AppCompatActivity {
                         imageView.update();
                     }
                 });
-                Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.test);
-                bmp = Bitmap.createScaledBitmap(bmp,480,640,true);
-                time = SystemClock.elapsedRealtime();
-                pose.send(bmp, time);
+//                Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.test);
+//                bmp = Bitmap.createScaledBitmap(bmp,320,480,true);
+//                time = SystemClock.elapsedRealtime();
+//                pose.send(bmp, time);
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.test);
+//                        bmp = Bitmap.createScaledBitmap(bmp,320,480,true);
+//                        time = SystemClock.elapsedRealtime();
+//                        pose.send(bmp,time);
+//
+//                        handler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.test);
+//                                bmp = Bitmap.createScaledBitmap(bmp,320,480,true);
+//                                time = SystemClock.elapsedRealtime();
+//                                pose.send(bmp,time);
+//
+//                                handler.postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.test);
+//                                        bmp = Bitmap.createScaledBitmap(bmp,320,480,true);
+//                                        time = SystemClock.elapsedRealtime();
+//                                        pose.send(bmp,time);
+//                                    }
+//                                }, 1);
+//                            }
+//                        }, 1);
+//                    }
+//                }, 1);
             }
         }).start();
     }

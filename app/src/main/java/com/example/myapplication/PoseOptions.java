@@ -11,4 +11,13 @@ package com.example.myapplication;
  * @date 2022/6/15
  */
 public class PoseOptions {
+    public boolean staticImageMode ;
+
+    public PoseOptions(boolean staticImageMode){
+        this.staticImageMode = staticImageMode;
+    }
+
+    public PoseOptions(){
+
+    }
 }

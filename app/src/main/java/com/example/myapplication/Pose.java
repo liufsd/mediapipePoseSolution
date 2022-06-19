@@ -54,11 +54,14 @@ public class Pose extends ImageSolutionBase {
 //                        Log.e("Pose","setOutputConverter==>bitmap==>" + bitmap.getWidth()  +  " " + bitmap.getHeight());
 //                        bitmap.recycle();
                         Packet packet = packets.get(INDEX_POSE_LANDMARKS);
-                        byte[] landmarksRaw = PacketGetter.getProtoBytes(packet);
-                        LandmarkProto.NormalizedLandmarkList poseLandmarks = LandmarkProto.NormalizedLandmarkList.parseFrom(landmarksRaw);
-                        Log.e("Pose","setOutputConverter==>poseLandmarks==>" + poseLandmarks.getLandmarkCount());
+                        if (!packet.isEmpty()){
+                            byte[] landmarksRaw = PacketGetter.getProtoBytes(packet);
+                            LandmarkProto.NormalizedLandmarkList poseLandmarks = LandmarkProto.NormalizedLandmarkList.parseFrom(landmarksRaw);
+                            Log.e("Pose","setOutputConverter==>poseLandmarks==>" + poseLandmarks.getLandmarkCount());
 //                        LandmarkProto.NormalizedLandmarkList poseLandmarks = PacketGetter.getProto(packet, LandmarkProto.NormalizedLandmarkList.class);
-                        poseResultBuilder.setPoseLandmarks(poseLandmarks);
+                            poseResultBuilder.setPoseLandmarks(poseLandmarks);
+                        }
+
                     } catch (MediaPipeException e) {
 //                        reportError("Error occurs while getting MediaPipe pose landmarks.", e);
                     } catch (InvalidProtocolBufferException e) {
@@ -77,7 +80,7 @@ public class Pose extends ImageSolutionBase {
                         .setBinaryGraphPath(GPU_GRAPH_NAME)
                         .setImageInputStreamName(IMAGE_INPUT_STREAM)
                         .setOutputStreamNames(OUTPUT_STREAMS)
-                        .setStaticImageMode(true)
+                        .setStaticImageMode(options.staticImageMode)
                         .build();
 
         initialize(context, solutionInfo, outputHandler);
